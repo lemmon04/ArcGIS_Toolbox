@@ -2,7 +2,5 @@
 Custom Geoprocessing Tools
 
 So Far:
-  Calculate Geometry
-  
-  MyBuffer
+  Calculate Geometr, MyBuffer
   
