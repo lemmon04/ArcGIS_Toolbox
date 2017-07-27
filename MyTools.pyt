@@ -16,11 +16,40 @@ class MyBuffer(object):
 		self.label = "MyBuffer"
 		self.description = ""
 		self.canRunInBackground = True
-		self.category = "My Custom Tools"
 	
 	def getParameterInfo(self):
-        	params = None
-        	return params
+        	#First Parameter
+		in_features = arcpy.Parameter(
+			displayName="Input Features",
+			name="in_features",				
+			datatype="Feature Layer",
+			parameterType="Required",
+			direction="Input")
+		in_features.filter.list = ["Polygon"]
+
+		#Second Parameter
+		field = arcpy.Parameter(
+	    		displayName="Field Name",
+	    		name="field_name",
+	    		datatype="Field",
+	    		parameterType="Required",
+	    		direction="Input")
+
+		field.parameterDependencies = [in_features.name]
+		field.filter.list = ["Short","Long","Double","Float","Text"]
+		
+		#Output Parameter
+		out_features = arcpy.Parameter(
+			displayName="Output Features",
+			name="out_features",
+			datatype="Feature Layer",
+			parameterType="Derived",
+			direction="Output")
+		out_features.parameterDependencies = [in_features.name]
+		out_features.schema.clone = True
+
+		params = [in_features, field]
+		return params
 
     	def isLicensed(self):
         	return True
