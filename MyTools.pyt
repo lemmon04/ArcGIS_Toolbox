@@ -59,12 +59,39 @@ class Toolbox(object):
         	return True
 
    	def updateParameters(self, parameters):
+		in_features = parameters[0]
+		buffer_units = parameters[2]
+
+		bufferUnitList = ['Centimeters', 'Feet', 'Inches',
+				  'Kilometers', 'Meters', 'Miles',
+				  'Millimeters', 'Nautical Miles',
+				  'Yards', 'Decimal Degrees']
+
+		#Get Shape type of input to display list for buffer_units parameter 		
+		if in_features.value:
+			desc = arcpy.Describe(in_features.valueAsText)
+			if desc.shapeType == 'Point':
+				buffer_units.filter.list = bufferUnitList
+			elif desc.shapeType == 'Polyline':
+				buffer_units.filter.list = bufferUnitList
+			elif desc.shapeType == 'Polygon':
+				print "File type not supported"
+
+		return
         	return
 	
 	def updateMessages(self, parameters):
 		return
 
    	def execute(self, parameters):
+		in_features = parameters[0].valueAsText
+		buffer_units = parameters[1].valueAsText + " " + parameters[2].valueAsText
+		Clip_Feature = parameters[3].valueAsText
+		out_features = "C:/Users/mlemmon/Documents/ArcGIS/Default1.gdb/Buffer"
+		output = "C:/Users/mlemmon/Documents/ArcGIS/Default1.gdb/Clip"
+		
+		arcpy.Buffer_analysis(in_features, out_features, buffer_units, "", "", "ALL")
+		arcpy.Clip_analysis(Clip_Feature, out_features, output)
         	return
 
 
