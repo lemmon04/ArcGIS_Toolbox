@@ -56,6 +56,12 @@ class MyBuffer(object):
 
    	def updateParameters(self, parameters):
         	return
+	
+	def updateMessages(self, parameters):
+		return
+
+   	def execute(self, parameters):
+        	return
 
 
 class CalculateGeometry(object):
