@@ -1,6 +1,5 @@
 # ArcGIS_Toolbox
 Custom Geoprocessing Tools
 
-So Far:
-  Calculate Geometry, MyBuffer
+Tools: Calculate Geometry, MyBuffer
   
