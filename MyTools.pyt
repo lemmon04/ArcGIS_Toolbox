@@ -2,6 +2,16 @@ import arcpy
 
 
 class Toolbox(object):
+    def __init__(self):
+        """Define the toolbox (the name of the toolbox is the name of the
+        .pyt file)."""
+        self.label = "My Tools"
+        self.alias = ""
+
+        # List of tool classes associated with this toolbox
+        self.tools = [CalculateGeometry, MyBuffer]
+
+class MyBuffer(object):
 	def __init__(self):
 		self.label = "MyBuffer"
 		self.description = ""
@@ -33,7 +43,14 @@ class Toolbox(object):
 	    		parameterType="Required",
 	    		direction="Input")
 		
-		#Fourth Parameter
+		#Fourth parameter
+		dissolve = arcpy.Parameter(
+			displayName="Dissolve",
+			name="dissolve",
+			datatype="String",
+			parameterType="Required",
+			direction="Input")
+		#Fifth Parameter
 		Clip_Feature = arcpy.Parameter(
 	    		displayName="Clip Feature",
 	    		name="Clip Feature",
@@ -53,14 +70,20 @@ class Toolbox(object):
 		out_features.parameterDependencies = [in_features.name]
 		out_features.schema.clone = True
 
-		params = [in_features, distance, buffer_units, Clip_Feature, out_features]
+		params = [in_features, distance, buffer_units, dissolve, Clip_Feature, out_features]
 		return params
+				
     	def isLicensed(self):
         	return True
-
-   	def updateParameters(self, parameters):
+	
+	def updateParameters(self, parameters):
 		in_features = parameters[0]
 		buffer_units = parameters[2]
+		dissolve = parameters[3]
+		
+		dissolveList = ['All', 'NONE', 'LIST']
+
+		dissolve.filter.list = dissolveList
 
 		bufferUnitList = ['Centimeters', 'Feet', 'Inches',
 				  'Kilometers', 'Meters', 'Miles',
@@ -78,20 +101,22 @@ class Toolbox(object):
 				print "File type not supported"
 
 		return
-        	return
-	
+		
 	def updateMessages(self, parameters):
+		
 		return
 
-   	def execute(self, parameters):
+   	def execute(self, parameters, Buffer_analysis):
 		in_features = parameters[0].valueAsText
 		buffer_units = parameters[1].valueAsText + " " + parameters[2].valueAsText
-		Clip_Feature = parameters[3].valueAsText
+		Clip_Feature = parameters[4].valueAsText
 		out_features = "C:/Users/mlemmon/Documents/ArcGIS/Default1.gdb/Buffer"
 		output = "C:/Users/mlemmon/Documents/ArcGIS/Default1.gdb/Clip"
+		dissolve = parameters[3].valueAsText
 		
-		arcpy.Buffer_analysis(in_features, out_features, buffer_units, "", "", "ALL")
+		arcpy.Buffer_analysis(in_features, out_features, buffer_units, "", "", dissolve)
 		arcpy.Clip_analysis(Clip_Feature, out_features, output)
+		
         	return
 
 
@@ -265,3 +290,5 @@ class CalculateGeometry(object):
 	arcpy.CalculateField_management(in_features, field,
 					exp, "PYTHON_9.3")
 	return
+        
+
