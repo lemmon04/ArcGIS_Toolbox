@@ -2,16 +2,6 @@ import arcpy
 
 
 class Toolbox(object):
-    def __init__(self):
-        """Define the toolbox (the name of the toolbox is the name of the
-        .pyt file)."""
-        self.label = "My Tools"
-        self.alias = ""
-
-        # List of tool classes associated with this toolbox
-        self.tools = [CalculateGeometry, MyBuffer]
-
-class MyBuffer(object):
 	def __init__(self):
 		self.label = "MyBuffer"
 		self.description = ""
@@ -25,19 +15,33 @@ class MyBuffer(object):
 			datatype="Feature Layer",
 			parameterType="Required",
 			direction="Input")
-		in_features.filter.list = ["Polygon"]
+		in_features.filter.list = ["Point","Polyline"]
 
 		#Second Parameter
-		field = arcpy.Parameter(
-	    		displayName="Field Name",
-	    		name="field_name",
-	    		datatype="Field",
+		distance = arcpy.Parameter(
+			displayName="Distance",
+			name="Distance",
+	    		datatype="String",
 	    		parameterType="Required",
 	    		direction="Input")
 
-		field.parameterDependencies = [in_features.name]
-		field.filter.list = ["Short","Long","Double","Float","Text"]
+		#Third Parameter
+		buffer_units = arcpy.Parameter(
+	    		displayName="Buffer Units",
+	    		name="buffer_units",
+	    		datatype="String",
+	    		parameterType="Required",
+	    		direction="Input")
 		
+		#Fourth Parameter
+		Clip_Feature = arcpy.Parameter(
+	    		displayName="Clip Feature",
+	    		name="Clip Feature",
+	    		datatype="Feature Layer",
+	    		parameterType="Required",
+	    		direction="Input")
+		Clip_Feature.filter.list = ["Polygon"]
+
 		#Output Parameter
 		out_features = arcpy.Parameter(
 			displayName="Output Features",
@@ -45,12 +49,12 @@ class MyBuffer(object):
 			datatype="Feature Layer",
 			parameterType="Derived",
 			direction="Output")
+		
 		out_features.parameterDependencies = [in_features.name]
 		out_features.schema.clone = True
 
-		params = [in_features, field]
+		params = [in_features, distance, buffer_units, Clip_Feature, out_features]
 		return params
-
     	def isLicensed(self):
         	return True
 
