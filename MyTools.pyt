@@ -1,4 +1,5 @@
 import arcpy
+from arcpy.sa import *
 
 
 class Toolbox(object):
@@ -9,12 +10,12 @@ class Toolbox(object):
         self.alias = ""
 
         # List of tool classes associated with this toolbox
-        self.tools = [CalculateGeometry, MyBuffer]
+        self.tools = [CalculateGeometry, MyBuffer, NewTool]
 
 class MyBuffer(object):
 	def __init__(self):
 		self.label = "MyBuffer"
-		self.description = ""
+		self.description = "Buffers a distance around points then clips areas of overlap between each buffer"
 		self.canRunInBackground = True
 	
 	def getParameterInfo(self):
@@ -291,4 +292,51 @@ class CalculateGeometry(object):
 					exp, "PYTHON_9.3")
 	return
         
+class NewTool(object):
+	def __init__(self):
+		self.label = "aNewTool"
+		self.description = "I'm not sure what this is going to be yet..."
+		self.canRunInBackground = True
+	
+	def getParameterInfo(self):
+		in_features = arcpy.Parameter(
+			displayName="First Parameter",
+			name="aFeature",
+			datatype=["Feature Layer","Raster Dataset","Layer File"],
+			parameterType="Required",
+			direction="Input")
+		output = arcpy.Parameter(
+			displayName="Output",
+			name="Output",
+			datatype="String",
+			parameterType="Required",
+			direction="Input")
+
+		params = [in_features,output]
+		return params
+
+	def isLicensed(self):
+		return True
+
+	def updateParameters(self,parameters):
+		in_features = parameters[0]  
+		output = parameters[1]          
+		return
+	
+	def updateMessage(self, parameters):
+		return True
+
+	def execute(self, parameters, Hillshade):
+		arcpy.CheckOutExtension("Spatial")
+		in_features = parameters[0].valueAsText
+		output = parameters[1].valueAsText
+		arcpy.env.Workspace = "C:\Michael\Test"
+		hs = arcpy.sa.Hillshade(in_features)
+		
+
+		hs.save(arcpy.env.Workspace)
+		return 
+	
+	
+
 
