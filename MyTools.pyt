@@ -1,4 +1,4 @@
-import arcpy
+import arcpy, os
 from arcpy.sa import *
 
 
@@ -305,14 +305,20 @@ class NewTool(object):
 			datatype=["Feature Layer","Raster Dataset","Layer File"],
 			parameterType="Required",
 			direction="Input")
-		output = arcpy.Parameter(
-			displayName="Output",
-			name="Output",
+		name = arcpy.Parameter(
+			displayName="Name",
+			name="Name",
 			datatype="String",
 			parameterType="Required",
-			direction="Input")
-
-		params = [in_features,output]
+			direction="input")
+		location = arcpy.Parameter(
+			displayName="location",
+			name="location",
+			datatype="String",
+			parameterType="Required",
+			direction="input")
+		
+		params = [in_features,name,location]
 		return params
 
 	def isLicensed(self):
@@ -329,12 +335,17 @@ class NewTool(object):
 	def execute(self, parameters, Hillshade):
 		arcpy.CheckOutExtension("Spatial")
 		in_features = parameters[0].valueAsText
-		output = parameters[1].valueAsText
-		arcpy.env.Workspace = "C:\Michael\Test"
+		name = parameters[1].valueAsText
+		output = parameters[2].valueAsText
+		
+		final = os.path.join(output , name)
+
 		hs = arcpy.sa.Hillshade(in_features)
 		
-
-		hs.save(arcpy.env.Workspace)
+		hs.save(final)
+		
+		
+		
 		return 
 	
 	
