@@ -10,7 +10,7 @@ class Toolbox(object):
         self.alias = ""
 
         # List of tool classes associated with this toolbox
-        self.tools = [CalculateGeometry, MyBuffer, NewTool]
+        self.tools = [CalculateGeometry, MyBuffer, Hillshade]
 
 class MyBuffer(object):
 	def __init__(self):
@@ -292,10 +292,10 @@ class CalculateGeometry(object):
 					exp, "PYTHON_9.3")
 	return
         
-class NewTool(object):
+class Hillshade(object):
 	def __init__(self):
-		self.label = "aNewTool"
-		self.description = "I'm not sure what this is going to be yet..."
+		self.label = "Hillshade"
+		self.description = "Runs Hillshade Tool on DEM"
 		self.canRunInBackground = True
 	
 	def getParameterInfo(self):
@@ -355,3 +355,6 @@ class NewTool(object):
 		
 	
 	
+
+
+
