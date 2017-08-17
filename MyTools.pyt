@@ -314,10 +314,10 @@ class NewTool(object):
 		location = arcpy.Parameter(
 			displayName="location",
 			name="location",
-			datatype="String",
+			datatype="Workspace",
 			parameterType="Required",
 			direction="input")
-		
+
 		params = [in_features,name,location]
 		return params
 
@@ -326,28 +326,32 @@ class NewTool(object):
 
 	def updateParameters(self,parameters):
 		in_features = parameters[0]  
-		output = parameters[1]          
+		name = parameters[1]  
+		location = parameters[2]        
 		return
 	
 	def updateMessage(self, parameters):
 		return True
 
 	def execute(self, parameters, Hillshade):
-		arcpy.CheckOutExtension("Spatial")
+		#arcpy.CheckOutExtension("Spatial")
 		in_features = parameters[0].valueAsText
 		name = parameters[1].valueAsText
-		output = parameters[2].valueAsText
+		location = parameters[2].valueAsText
 		
-		final = os.path.join(output , name)
+		finalPath = os.path.join(location , name)
 
-		hs = arcpy.sa.Hillshade(in_features)
+		hs = arcpy.sa.Hillshade(in_features,finalPath)
 		
-		hs.save(final)
-		
-		
+		hs.save(finalPath)
 		
 		return 
-	
-	
 
 
+		#Spatial Analyst Tools require a save
+		#Spatial Analyst syntax arcpy.sa.Tool(in_raster, {output_measurement}, {z_factor})
+		#3D Analyst syntax -- arcpy.Tool(in_raster=None, out_raster=None, output_measurement=None, z_factor=None)
+		
+		
+	
+	
