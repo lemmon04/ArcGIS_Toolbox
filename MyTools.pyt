@@ -317,8 +317,14 @@ class Hillshade(object):
 			datatype="Workspace",
 			parameterType="Required",
 			direction="input")
+		point = arcpy.Parameter(
+			displayName="Point",
+			name="Point",
+			datatype="String",
+			parameterType="Required",
+			direction="input")
 
-		params = [in_features,name,location]
+		params = [in_features,name,location,point]
 		return params
 
 	def isLicensed(self):
@@ -338,12 +344,25 @@ class Hillshade(object):
 		in_features = parameters[0].valueAsText
 		name = parameters[1].valueAsText
 		location = parameters[2].valueAsText
-		
 		finalPath = os.path.join(location , name)
-
-		hs = arcpy.sa.Hillshade(in_features,finalPath)
+		
+		hs = arcpy.sa.Hillshade(in_features)
 		
 		hs.save(finalPath)
+
+
+		#Create a Point
+		arcpy.env.outputCoordinateSystem = arcpy.SpatialReference("NAD 1983 UTM Zone 11N")  
+  		
+		highpoint = arcpy.GetRasterProperties_management(in_features, "MAXIMUM")
+		
+		mypointG = arcpy.CreateFeatureclass_management(location, point,"POINT") 
+		
+		cursor = arcpy.da.InsertCursor(mypointG, ["SHAPE@XY"])
+		xy = (3980776,5978638)
+		cursor.insertRow([xy])
+		
+	
 		
 		return 
 
@@ -351,10 +370,3 @@ class Hillshade(object):
 		#Spatial Analyst Tools require a save
 		#Spatial Analyst syntax arcpy.sa.Tool(in_raster, {output_measurement}, {z_factor})
 		#3D Analyst syntax -- arcpy.Tool(in_raster=None, out_raster=None, output_measurement=None, z_factor=None)
-		
-		
-	
-	
-
-
-
