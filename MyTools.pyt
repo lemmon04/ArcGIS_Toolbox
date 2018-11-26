@@ -111,8 +111,8 @@ class MyBuffer(object):
 		in_features = parameters[0].valueAsText
 		buffer_units = parameters[1].valueAsText + " " + parameters[2].valueAsText
 		Clip_Feature = parameters[4].valueAsText
-		out_features = "C:/Users/mlemmon/Documents/ArcGIS/Default1.gdb/Buffer"
-		output = "C:/Users/mlemmon/Documents/ArcGIS/Default1.gdb/Clip"
+		out_features = ""
+		output = ""
 		dissolve = parameters[3].valueAsText
 		
 		arcpy.Buffer_analysis(in_features, out_features, buffer_units, "", "", dissolve)
